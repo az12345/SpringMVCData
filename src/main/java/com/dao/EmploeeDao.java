@@ -13,7 +13,8 @@ import java.util.List;
 public class EmploeeDao {
     private SessionFactory sessionFactory;
     @Autowired
-    @Qualifier("hibernate4AnnotatedSessionFactory")
+//    @Qualifier("hibernate4AnnotatedSessionFactory")
+    @Qualifier("factoryBean")
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -25,7 +26,7 @@ public class EmploeeDao {
     public List<Emploee> emploeeList(){
         Session session = this.sessionFactory.getCurrentSession();
 
-        List<Emploee> list = session.createQuery("from Emploee ").list();
+        List<Emploee> list = session.createQuery("from Emploee").list();
         return list;
     }
 }
