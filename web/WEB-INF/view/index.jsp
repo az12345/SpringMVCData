@@ -20,11 +20,15 @@
     <tr>
       <td>id</td>
       <td>name</td>
+      <td>Delete</td>
+      <td>Edit</td>
     </tr>
     <c:forEach items="${list}" var="emploee">
     <tr>
       <td>${emploee.id}</td>
       <td>${emploee.name}</td>
+      <td><a href="<c:url value='/delete/${emploee.id}' />"> delete </a> </td>
+      <td><a href="<c:url value='/update/${emploee.id}' />"> edit </a> </td>
     </tr>
     </c:forEach>
   </table>
