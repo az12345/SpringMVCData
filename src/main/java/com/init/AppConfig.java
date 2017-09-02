@@ -2,11 +2,19 @@ package com.init;
 
 import java.util.Properties;
 
+import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.hibernate4.HibernateTransactionManager;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaTransactionManager;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
@@ -14,10 +22,11 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Configuration
-@ComponentScan("com")
+@ComponentScan(basePackages = "com")
 @EnableWebMvc
 @EnableTransactionManagement
 @PropertySource("classpath:application.properties")
+@EnableJpaRepositories("com.dao")
 public class AppConfig {
     private static final String PROPERTY_NAME_DATABASE_DRIVER = "db.driver";
     private static final String PROPERTY_NAME_DATABASE_PASSWORD = "db.password";
@@ -30,8 +39,15 @@ public class AppConfig {
 
     @Resource
     private Environment environment;
+
+    private Properties propirties() {
+        Properties properties = new Properties();
+        properties.put(PROPERTY_NAME_HIBERNATE_DIALECT, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT));
+        properties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL));
+        return properties;
+    }
     @Bean
-    public DataSource dataSource(){
+    public DataSource dataSource() {
         DriverManagerDataSource driverManagerDataSource = new DriverManagerDataSource();
         driverManagerDataSource.setDriverClassName(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_DRIVER));
         driverManagerDataSource.setUrl(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_URL));
@@ -39,7 +55,29 @@ public class AppConfig {
         driverManagerDataSource.setPassword(environment.getRequiredProperty(PROPERTY_NAME_DATABASE_PASSWORD));
         return driverManagerDataSource;
     }
+
+
+
     @Bean
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
+        LocalContainerEntityManagerFactoryBean entityManager = new LocalContainerEntityManagerFactoryBean();
+        entityManager.setDataSource(dataSource());
+        entityManager.setPersistenceProviderClass(HibernatePersistenceProvider.class);
+        entityManager.setJpaVendorAdapter(new HibernateJpaVendorAdapter());
+        entityManager.setJpaProperties(propirties());
+        entityManager.setPackagesToScan("com");
+        return entityManager;
+    }
+
+    @Bean
+    public JpaTransactionManager transactionManager() {
+        JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory().getObject());
+        return transactionManager;
+    }
+
+
+        @Bean
     public LocalSessionFactoryBean factoryBean(){
         LocalSessionFactoryBean bean = new LocalSessionFactoryBean();
         bean.setDataSource(dataSource());
@@ -47,17 +85,37 @@ public class AppConfig {
         bean.setHibernateProperties(propirties());
         return bean;
     }
-    @Bean
-    public HibernateTransactionManager transactionManager(){
-        HibernateTransactionManager manager = new HibernateTransactionManager();
-        manager.setSessionFactory(factoryBean().getObject());
-        return manager;
-    }
+////    @Bean
+////    public HibernateTransactionManager transactionManager(){
+////        HibernateTransactionManager manager = new HibernateTransactionManager();
+////        manager.setSessionFactory(factoryBean().getObject());
+////        return manager;
+////    }
+//
 
-    private Properties propirties() {
-        Properties properties = new Properties();
-        properties.put(PROPERTY_NAME_HIBERNATE_DIALECT, environment.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT));
-        properties.put( PROPERTY_NAME_HIBERNATE_SHOW_SQL, environment.getRequiredProperty( PROPERTY_NAME_HIBERNATE_SHOW_SQL ));
-        return properties;
-    }
+//
+//
+//    @Autowired
+//    private Environment env;
+//    @Bean
+//    public LocalContainerEntityManagerFactoryBean getEntityManagerFactoryBean() {
+//        LocalContainerEntityManagerFactoryBean lcemfb = new LocalContainerEntityManagerFactoryBean();
+//        lcemfb.setJpaVendorAdapter(getJpaVendorAdapter());
+//        lcemfb.setDataSource(dataSource());
+////        lcemfb.setPersistenceUnitName("myJpaPersistenceUnit");
+//        lcemfb.setPackagesToScan("com");
+//        lcemfb.setJpaProperties(propirties());
+//        return lcemfb;
+//    }
+//    @Bean
+//    public JpaVendorAdapter getJpaVendorAdapter() {
+//        JpaVendorAdapter adapter = new HibernateJpaVendorAdapter();
+//        return adapter;
+//    }
+//    @Bean
+//    public PlatformTransactionManager txManager(){
+//        JpaTransactionManager jpaTransactionManager = new JpaTransactionManager(
+//                getEntityManagerFactoryBean().getObject());
+//        return jpaTransactionManager;
+//    }
 }

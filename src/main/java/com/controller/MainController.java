@@ -22,8 +22,8 @@ public class MainController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
         public ModelAndView main(Model model){
-           model.addAttribute("emploee", new Emploee());
-           model.addAttribute("list", emploeeService.emploeeList());
+//           model.addAttribute("emploee", new Emploee());
+//           model.addAttribute("list", emploeeService.emploeeList());
            return new ModelAndView("index");
         }
         @RequestMapping(value = "/add", method = RequestMethod.POST)

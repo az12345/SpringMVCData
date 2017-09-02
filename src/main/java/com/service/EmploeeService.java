@@ -1,6 +1,7 @@
 package com.service;
 
 import com.dao.EmploeeDao;
+import com.dao.RepositoryEmploee;
 import com.model.Emploee;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,16 +13,21 @@ import java.util.List;
 @Service
 @Transactional
 public class EmploeeService {
-    private EmploeeDao emploeeDao;
     @Autowired
-    @Qualifier("emploeeDao")
-    public void setEmploeeDao(EmploeeDao emploeeDao) {
-        this.emploeeDao = emploeeDao;
-    }
+    RepositoryEmploee repositoryEmploee;
+
+//    private EmploeeDao emploeeDao;
+//    @Autowired
+//    @Qualifier("emploeeDao")
+//    public void setEmploeeDao(EmploeeDao emploeeDao) {
+//        this.emploeeDao = emploeeDao;
+//    }
     public void saveEmploee(Emploee emploee){
-        this.emploeeDao.saveEmploee(emploee);
+//        this.emploeeDao.saveEmploee(emploee);
+        repositoryEmploee.save(emploee);
     }
-    public List<Emploee> emploeeList(){
-        return this.emploeeDao.emploeeList();
-    }
+//    public List<Emploee> emploeeList(){
+//        return this.emploeeDao.emploeeList();
+//    }
+
 }
