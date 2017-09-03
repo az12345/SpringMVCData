@@ -1,5 +1,6 @@
 package com.service;
 
+import com.dao.DaoEmploee;
 import com.dao.EmploeeDao;
 import com.model.Emploee;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +13,33 @@ import java.util.List;
 @Service
 @Transactional
 public class EmploeeService {
-    private EmploeeDao emploeeDao;
+    private DaoEmploee daoEmploee;
+
     @Autowired
-    @Qualifier("emploeeDao")
-    public void setEmploeeDao(EmploeeDao emploeeDao) {
-        this.emploeeDao = emploeeDao;
+    @Qualifier("daoEmploee")
+    public void setDaoEmploee(DaoEmploee daoEmploee) {
+        this.daoEmploee = daoEmploee;
     }
-    public void saveEmploee(Emploee emploee){
-        this.emploeeDao.saveEmploee(emploee);
+//    private EmploeeDao emploeeDao;
+//    @Autowired
+//    @Qualifier("emploeeDao")
+//    public void setEmploeeDao(EmploeeDao emploeeDao) {
+//        this.emploeeDao = emploeeDao;
+//    }
+//    public void saveEmploee(Emploee emploee){
+//        this.emploeeDao.saveEmploee(emploee);
+//    }
+//    public List<Emploee> emploeeList(){
+//        return this.emploeeDao.emploeeList();
+//    }
+
+
+    public void saveEmploee(Emploee emploee) {
+        this.daoEmploee.save(emploee);
     }
-    public List<Emploee> emploeeList(){
-        return this.emploeeDao.emploeeList();
+
+    public Iterable<Emploee> emploeeList() {
+        return this.daoEmploee.findAll();
     }
+
 }

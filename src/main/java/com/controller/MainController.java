@@ -14,20 +14,40 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class MainController {
     private EmploeeService emploeeService;
-    @Autowired
-    @Qualifier("emploeeService")
-    public void setEmploeeService(EmploeeService emploeeService) {
-        this.emploeeService = emploeeService;
-    }
+//    @Autowired
+//    @Qualifier("emploeeService")
+//    public void setEmploeeService(EmploeeService emploeeService) {
+//        this.emploeeService = emploeeService;
+//    }
+//
+//    @RequestMapping(value = "/", method = RequestMethod.GET)
+//        public ModelAndView main(Model model){
+//           model.addAttribute("emploee", new Emploee());
+////           model.addAttribute("list", emploeeService.emploeeList());
+//           return new ModelAndView("index");
+//        }
+//        @RequestMapping(value = "/add", method = RequestMethod.POST)
+//    public String add(@ModelAttribute Emploee emploee){
+//            emploeeService.saveEmploee(emploee);
+//            return "redirect:/";
+//        }
 
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-        public ModelAndView main(Model model){
-           model.addAttribute("emploee", new Emploee());
-           model.addAttribute("list", emploeeService.emploeeList());
-           return new ModelAndView("index");
+
+        @Autowired
+        @Qualifier("emploeeService")
+        public void setEmploeeService(EmploeeService emploeeService) {
+            this.emploeeService = emploeeService;
         }
+
+        @RequestMapping(value = "/", method = RequestMethod.GET)
+        public ModelAndView main(Model model) {
+            model.addAttribute("emploee", new Emploee());
+            model.addAttribute("list", emploeeService.emploeeList());
+            return new ModelAndView("index");
+        }
+
         @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String add(@ModelAttribute Emploee emploee){
+        public String add(@ModelAttribute Emploee emploee) {
             emploeeService.saveEmploee(emploee);
             return "redirect:/";
         }

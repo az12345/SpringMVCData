@@ -10,6 +10,7 @@ import java.util.Map;
 /**
  * Created by Сизиф on 31.08.2017.
  */
+
 public class Main {
     private static final SessionFactory ourSessionFactory;
 
