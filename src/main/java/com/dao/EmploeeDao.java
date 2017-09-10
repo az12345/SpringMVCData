@@ -29,4 +29,6 @@ public class EmploeeDao {
 //        List<Emploee> list = session.createQuery("from Emploee").list();
 //        return list;
 //    }
+
+
 }

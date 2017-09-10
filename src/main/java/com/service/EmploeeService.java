@@ -42,4 +42,24 @@ public class EmploeeService {
         return this.daoEmploee.findAll();
     }
 
+    public void deleteEmploee(int id) {
+        this.daoEmploee.delete(id);
+    }
+
+    public Emploee findEmploeeById(int id) {
+        return this.daoEmploee.findOne(id);
+    }
+
+    public void updateEmploee(Emploee emploee) {
+        this.daoEmploee.save(emploee);
+    }
+
+    public Emploee findByName(String name){
+        return this.daoEmploee.findByName(name);
+    }
+
+    public List<Emploee> findDesc(){
+        return daoEmploee.findDesc();
+    }
+
 }
